@@ -1,0 +1,33 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "line_items",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "phase",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "expect_finished_date",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "line_items",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "phase",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "expected_finish_date",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
