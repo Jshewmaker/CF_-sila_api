@@ -26,4 +26,5 @@ function createUserHandle() {
     return `divvy-${randValue}`;
 }
 
-check_handle();
+check_handle(); 
+    
