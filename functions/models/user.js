@@ -1,0 +1,114 @@
+class User {
+    constructor(
+        id,
+        name,
+        dateOfBirthYYYYMMDD,
+        identityValue,
+        streetAddress,
+        city,
+        state,
+        country,
+        postalCode,
+        phone,
+        email,
+        website,
+        doingBusinessAsName,
+        businessType,
+        naicsCode,
+        privateKey,
+        silaEntityName,
+        silaHandle,
+        isHomeowner,
+        wallet,
+        businessAdminDocumentID,
+        projectID,
+        bankAccountIsConnected,
+    ) {
+        this.name = name;
+        this.id = id;
+        this.dateOfBirthYYYYMMDD = dateOfBirthYYYYMMDD;
+        this.identityValue = identityValue;
+        this.streetAddress = streetAddress;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.postalCode = postalCode;
+        this.phone = phone;
+        this.email = email;
+        this.doingBusinessAsName = doingBusinessAsName;
+        this.businessType = businessType;
+        this.naicsCode = naicsCode;
+        this.website = website;
+        this.privateKey = privateKey;
+        this.silaEntityName = silaEntityName;
+        this.silaHandle = silaHandle;
+        this.isHomeowner = isHomeowner;
+        this.wallet = wallet;
+        this.businessAdminDocumentID = businessAdminDocumentID;
+        this.projectID = projectID;
+        this.bankAccountIsConnected = bankAccountIsConnected;
+
+    }
+
+}
+
+// Firestore data converter
+var userConverter = {
+    toFirestore: function (user) {
+        return {
+            id: user.id,
+            name: user.name,
+            dateOfBirthYYYYMMDD: user.dateOfBirthYYYYMMDD,
+            identityValue: user.identityValue,
+            streetAddress: user.streetAddress,
+            city: user.city,
+            state: user.state,
+            country: user.country,
+            postalCode: user.postalCode,
+            phone: user.phone,
+            email: user.email,
+            website: user.website,
+            doingBusinessAsName: user.doingBusinessAsName,
+            businessType: user.businessType,
+            naicsCode: user.naicsCode,
+            privateKey: user.privateKey,
+            silaHandle: user.silaHandle,
+            silaEntityName: user.silaEntityName,
+            isHomeowner: user.isHomeowner,
+            wallet: user.wallet,
+            businessAdminDocumentID: user.businessAdminDocumentID,
+            projectID: user.projectID,
+            bankAccountIsConnected: user.bankAccountIsConnected,
+        };
+    },
+    fromFirestore: function (snapshot, options) {
+        const data = snapshot;
+        return new User(
+            data.id,
+            data.name,
+            data.dateOfBirthYYYYMMDD,
+            data.identityValue,
+            data.streetAddress,
+            data.city,
+            data.state,
+            data.country,
+            data.postalCode,
+            data.phone,
+            data.email,
+            data.website,
+            data.doingBusinessAsName,
+            data.businessType,
+            data.naicsCode,
+            data.privateKey,
+            data.silaEntityName,
+            data.silaHandle,
+            data.isHomeowner,
+            data.wallet,
+            data.businessAdminDocumentID,
+            data.projectID,
+            data.bankAccountIsConnected,
+        );
+    }
+};
+
+module.exports = {userConverter};

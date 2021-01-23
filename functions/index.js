@@ -1,17 +1,25 @@
 const functions = require("firebase-functions");
+const entities = require("./entities.js")
 const express = require("express");
 const Sila = require('sila-sdk').default;
 const cors = require("cors");
 const admin = require("firebase-admin");
 const { log } = require("firebase-functions/lib/logger");
-admin.initializeApp();
 const app = express();
 app.use(cors({origin: true}));
 
 
 
-app.post("/", async (req, res) => {
 
+app.post("/check_handle", async (req, res) => {
+  var id = req.body.user_id;
+  var userHandle = await entities.check_handle(userID);
+  functions.logger.log(userHandle);
+  var responseBody = {"user_handle" : userHandle};
+  res.status(200).send(responseBody);
+});
+
+app.post("/", async (req, res) => {
   const wallet = Sila.generateWallet();
   console.log(wallet.address);
  
