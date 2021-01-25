@@ -18,7 +18,7 @@ app.use(cors({ origin: true }));
 
 
 
-async function check_handle(userID) {
+async function check_handle() {
 
     var res;
 
@@ -28,33 +28,32 @@ async function check_handle(userID) {
 
     } while (res.statusCode != 200)
 
-    var data = {
-        "sila_handle": userHandle,
-    }
 
-    admin.firestore().collection('users').doc(userID).set(data, { merge: true })
-
-    console.log(res.statusCode); // 200
-    console.log(res.data.reference); // your unique id
-    console.log(res.data.status); // SUCCESS
-    console.log(res.data.message);
     return userHandle;
 
 };
 
 
 async function register_user(userID) {
-
+    var userHandle = await check_handle();
     await authentication.createUserEthData(userID);
     const user = await firestore.getUserData(userID);
-    await registerSilaUser(user);
+    var response = await registerSilaUser(user, userHandle);
+    if (response.staus_code = 200) {
+
+        var data = {
+            "sila_handle": userHandle,
+        }
+
+        await admin.firestore().collection('users').doc(user.id).set(data, { merge: true });
+    }
     return user.toJSON();
 
 }
 
-async function registerSilaUser(user) {
+async function registerSilaUser(user, userHandle) {
     const silaUser = new Sila.User();
-    silaUser.handle = user.sila_handle;
+    silaUser.handle = userHandle;
     silaUser.firstName = user.name.split(" ")[0];
     silaUser.lastName = user.name.split(" ")[1];
     silaUser.address = user.street_address;
@@ -67,8 +66,9 @@ async function registerSilaUser(user) {
     silaUser.ssn = user.identity_value;
     silaUser.cryptoAddress = user.wallet;
     response = await Sila.register(silaUser);
-    console.log("3: " + silaUser.cryptoAddress);
     console.log("response from sila: " + response.data.message);
+    return response;
+
 }
 
 async function check_kyc() {
