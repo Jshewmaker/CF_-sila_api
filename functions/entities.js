@@ -1,12 +1,22 @@
 const Sila = require('sila-sdk').default;
-const db = require('./database');
+// const db = require('./database');
 const lib = require("./config");
 const userConverter = require("./models/user");
-const userTest = require("./models/user copy");
+const firestore = require("./services/firebase");
 const authentication = require("./authentication");
+// const admin = require("firebase-admin");
 Sila.configure(config);
 
-register_user("4321");
+const functions = require("firebase-functions");
+const entities = require("./entities.js")
+const express = require("express");
+const cors = require("cors");
+const admin = require("firebase-admin");
+const { log } = require("firebase-functions/lib/logger");
+const app = express();
+app.use(cors({ origin: true }));
+
+
 
 async function check_handle(userID) {
 
@@ -22,7 +32,7 @@ async function check_handle(userID) {
         "sila_handle": userHandle,
     }
 
-    db.instance.collection('users').doc(userID).set(data, { merge: true })
+    admin.firestore().collection('users').doc(userID).set(data, { merge: true })
 
     console.log(res.statusCode); // 200
     console.log(res.data.reference); // your unique id
@@ -34,42 +44,32 @@ async function check_handle(userID) {
 
 
 async function register_user(userID) {
-    authentication.createUserEthData(userID); //connects to the db just fine
 
-    //the rest is fucked 
-    const postSnap = await db.instance.collection('users').doc(userID).get();
-    let user = userTest.fromFirestore(postSnap);
-    var test = user.test;
-
-    // db.instance.collection('users').doc(userID).withConverter(userTestConverter).get().then(function (doc) {
-    //     if (doc.exists) {
-    //         console.log("SUCCESS")
-    //         var userData = doc.data();
-    //         const user = new Sila.User();
-    //         user.handle = userData.sila_handle;
-    //         user.firstName = userData.name;//.split(" ")[0];
-    //         user.lastName = userData.name;//.split(" ")[1];
-    //         user.address = userData.address;
-    //         user.city = userData.city;
-    //         user.state = userData.state;
-    //         user.zip = userData.zip;
-    //         user.phone = userData.phone;
-    //         user.email = userData.email;
-    //         user.dateOfBirth = userData.dateOfBirth;
-    //         user.ssn = userData.identityValue;
-    //         user.cryptoAddress = userData.wallet;
-    //         var response = Sila.register(user);
-    //         return response;
-            
-    //     } else {
-    //         console.log("No such document!");
-    //     }
-    // }).catch(function (error) {
-    //     console.log("Error getting document:", error);
-    // });
+    await authentication.createUserEthData(userID);
+    const user = await firestore.getUserData(userID);
+    await registerSilaUser(user);
+    return user.toJSON();
 
 }
 
+async function registerSilaUser(user) {
+    const silaUser = new Sila.User();
+    silaUser.handle = user.sila_handle;
+    silaUser.firstName = user.name.split(" ")[0];
+    silaUser.lastName = user.name.split(" ")[1];
+    silaUser.address = user.street_address;
+    silaUser.city = user.city;
+    silaUser.state = user.state;
+    silaUser.zip = user.postal_code;
+    silaUser.phone = user.phone;
+    silaUser.email = user.email;
+    silaUser.dateOfBirth = user.date_of_birth;
+    silaUser.ssn = user.identity_value;
+    silaUser.cryptoAddress = user.wallet;
+    response = await Sila.register(silaUser);
+    console.log("3: " + silaUser.cryptoAddress);
+    console.log("response from sila: " + response.data.message);
+}
 
 async function check_kyc() {
     const res = await Sila.checkKYC(userHandle, walletPrivateKey);
@@ -81,4 +81,5 @@ function createUserHandle() {
     return `divvy-${randValue}`;
 }
 
-module.exports = { check_handle };
+
+module.exports = { check_handle, register_user };
