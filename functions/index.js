@@ -38,6 +38,12 @@ app.post("/register_user", async (req, res) => {
   res.status(200).send(JSON.stringify(userData));
 });
 
+app.post("/request_kyc", async (req, res) => {
+  var userID = req.body.user_id;
+  var userData = await entities.sila_request_kyc(userID);
+  res.status(200).send(JSON.stringify(userData));
+});
+
 // app.post("/", async (req, res) => {
 //   const wallet = Sila.generateWallet();
 //   console.log(wallet.address);

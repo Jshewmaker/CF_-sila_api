@@ -18,7 +18,7 @@ app.use(cors({ origin: true }));
 
 
 
-async function check_handle() {
+async function sila_check_handle() {
 
     var res;
 
@@ -35,10 +35,10 @@ async function check_handle() {
 
 
 async function register_user(userID) {
-    var userHandle = await check_handle();
+    var userHandle = await sila_check_handle();
     await authentication.createUserEthData(userID);
     const user = await firestore.getUserData(userID);
-    var response = await registerSilaUser(user, userHandle);
+    var response = await sila_register_user(user, userHandle);
     if (response.staus_code = 200) {
 
         var data = {
@@ -51,7 +51,7 @@ async function register_user(userID) {
 
 }
 
-async function registerSilaUser(user, userHandle) {
+async function sila_register_user(user, userHandle) {
     const silaUser = new Sila.User();
     silaUser.handle = userHandle;
     silaUser.firstName = user.name.split(" ")[0];
@@ -71,8 +71,11 @@ async function registerSilaUser(user, userHandle) {
 
 }
 
-async function check_kyc() {
-    const res = await Sila.checkKYC(userHandle, walletPrivateKey);
+async function sila_request_kyc(userID) {
+    const user = await firestore.getUserData(userID);
+    const res = await Sila.requestKYC(user.sila_handle, user.private_key);
+    console.log("response from sila: " + res.data.message);
+    return res;
 }
 
 function createUserHandle() {
@@ -82,4 +85,4 @@ function createUserHandle() {
 }
 
 
-module.exports = { check_handle, register_user };
+module.exports = { check_handle: sila_check_handle, register_user, sila_request_kyc };
