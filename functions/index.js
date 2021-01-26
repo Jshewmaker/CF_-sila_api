@@ -4,6 +4,7 @@ const express = require("express");
 const Sila = require('sila-sdk').default;
 const cors = require("cors");
 const admin = require("firebase-admin");
+const testFunctions = require("./testing_helpers.js");
 const { log } = require("firebase-functions/lib/logger");
 const app = express();
 app.use(cors({origin: true}));
@@ -14,6 +15,13 @@ admin.initializeApp();
 app.get('/', async (req, res) => {
   var userData = await entities.register_user("1234");
   res.status(200).send(JSON.stringify(userData));
+});
+
+
+
+app.post("/create_test_user", async (req, res) => {
+  await testFunctions.testAddDataToFirestore();
+  res.status(200).send();
 });
 
 app.post("/check_handle", async (req, res) => {
