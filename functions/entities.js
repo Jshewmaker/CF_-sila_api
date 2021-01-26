@@ -34,22 +34,7 @@ async function sila_check_handle() {
 };
 
 
-async function register_user(userID) {
-    var userHandle = await sila_check_handle();
-    await authentication.createUserEthData(userID);
-    const user = await firestore.getUserData(userID);
-    var response = await sila_register_user(user, userHandle);
-    if (response.staus_code = 200) {
 
-        var data = {
-            "sila_handle": userHandle,
-        }
-
-        await admin.firestore().collection('users').doc(user.id).set(data, { merge: true });
-    }
-    return user.toJSON();
-
-}
 
 async function sila_register_user(user, userHandle) {
     const silaUser = new Sila.User();
@@ -82,6 +67,23 @@ function createUserHandle() {
     var randValue = Math.floor(100000 + Math.random() * 900000);
     console.log(`divvy-${randValue}`);
     return `divvy-${randValue}`;
+}
+
+async function register_user(userID) {
+    var userHandle = await sila_check_handle();
+    await authentication.createUserEthData(userID);
+    const user = await firestore.getUserData(userID);
+    var response = await sila_register_user(user, userHandle);
+    if (response.staus_code = 200) {
+
+        var data = {
+            "sila_handle": userHandle,
+        }
+
+        await admin.firestore().collection('users').doc(user.id).set(data, { merge: true });
+    }
+    return user.toJSON();
+
 }
 
 
