@@ -51,7 +51,7 @@ async function sila_register_user(user, userHandle) {
     silaUser.ssn = user.identity_value;
     silaUser.cryptoAddress = user.wallet;
     response = await Sila.register(silaUser);
-    console.log("response from sila: " + response.data.message);
+    console.log("registerUSer response from sila: " + response.data.message);
     return response;
 
 }
@@ -59,10 +59,44 @@ async function sila_register_user(user, userHandle) {
 async function sila_request_kyc(userID) {
     const user = await firestore.getUserData(userID);
     const res = await Sila.requestKYC(user.sila_handle, user.private_key);
-    console.log("response from sila: " + res.data.message);
+    console.log("requestKYC response from sila: " + res.data.message);
     return res;
 }
 
+async function sila_check_kyc(userID) {
+    const user = await firestore.getUserData(userID);
+    const res = await Sila.checkKYC(user.sila_handle, user.private_key);
+    console.log("checkKYC response from sila: " + res.data.message);
+    return res;
+}
+
+async function sila_add_email(userID, email) {
+    const user = await firestore.getUserData(userID);
+    const res = await Sila.addEmail(user.sila_handle, user.private_key, email);
+    console.log("addEmail response from sila: " + res.data.message);
+    return res;
+}
+
+async function sila_add_phone(userID, phone) {
+    const user = await firestore.getUserData(userID);
+    const res = await Sila.addPhone(user.sila_handle, user.private_key, phone);
+    console.log("addPhone response from sila: " + res.data.message);
+    return res;
+}
+
+async function sila_add_identity(userID,  identity) {
+    const user = await firestore.getUserData(userID);
+    const res = await Sila.addIdentity(user.sila_handle, user.private_key,identity);
+    console.log("addIdentity response from sila: " + res.data.message);
+    return res;
+}
+
+async function sila_add_address(userID,  address) {
+    const user = await firestore.getUserData(userID);
+    const res = await Sila.addAddress(user.sila_handle, user.private_key, address);
+    console.log("addAddress response from sila: " + res.data.message);
+    return res;
+}
 function createUserHandle() {
     var randValue = Math.floor(100000 + Math.random() * 900000);
     console.log(`divvy-${randValue}`);
@@ -87,4 +121,4 @@ async function register_user(userID) {
 }
 
 
-module.exports = { check_handle: sila_check_handle, register_user, sila_request_kyc };
+module.exports = { check_handle: sila_check_handle, register_user, sila_request_kyc, sila_check_kyc, sila_add_email, sila_add_phone, sila_add_identity, sila_add_address };
