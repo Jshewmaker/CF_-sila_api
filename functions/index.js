@@ -13,6 +13,7 @@ admin.initializeApp();
 
 
 // "id": '0Woej2JWoWVsxmRhqm4tkado5MQ2',
+//"token": "public-sandbox-05542b25-2ff0-48ce-b58a-6ad0bf572c16"
 
 app.get('/', async (req, res) => {
   var userData = await entities.register_user("1234");
