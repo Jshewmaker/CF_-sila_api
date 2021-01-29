@@ -1,6 +1,8 @@
 const functions = require("firebase-functions");
 const entities = require("./entities.js")
 const accounts = require("./accounts.js")
+const wallets = require("./wallets.js")
+const transactions = require("./transactions.js")
 const express = require("express");
 const Sila = require('sila-sdk').default;
 const cors = require("cors");
@@ -15,8 +17,8 @@ admin.initializeApp();
 // "id": '0Woej2JWoWVsxmRhqm4tkado5MQ2',
 //"token": "public-sandbox-05542b25-2ff0-48ce-b58a-6ad0bf572c16"
 
-app.get('/', async (req, res) => {
-  var userData = await entities.register_user("1234");
+app.post('/', async (req, res) => {
+  var userData = await entities.register_user("0Woej2JWoWVsxmRhqm4tkado5MQ2");
   res.status(200).send(JSON.stringify(userData));
 });
 
@@ -112,8 +114,49 @@ app.post("/get_bank_accounts", async (req, res) => {
   res.status(200).send(JSON.stringify(userData));
 });
 
+/////////////////////////////////////////////////////////////////////////////
+//Wallets
 
 
+app.post("/get_wallet", async (req, res) => {
+  var userID = req.body.user_id;
+  var userData = await wallets.sila_get_wallet(userID);
+  res.status(200).send(JSON.stringify(userData));
+});
+
+app.post("/get_sila_balance", async (req, res) => {
+  var userID = req.body.user_id;
+  var userData = await wallets.sila_get_balance(userID);
+  res.status(200).send(JSON.stringify(userData));
+});
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//Transactions
+
+
+app.post("/issue_sila", async (req, res) => {
+  var userData = await transactions.sila_issue(req.body);
+  res.status(200).send(JSON.stringify(userData));
+});
+
+app.post("/transfer_sila", async (req, res) => {
+  var userData = await transactions.sila_transfer(req.body);
+  res.status(200).send(JSON.stringify(userData));
+});
+
+app.post("/redeem_sila", async (req, res) => {
+  var userID = req.body.user_id;
+  var userData = await transactions.sila_get_wallet(userID);
+  res.status(200).send(JSON.stringify(userData));
+});
+
+app.post("/get_transactions", async (req, res) => {
+  var userID = req.body.user_id;
+  var userData = await transactions.sila_get_balance(userID);
+  res.status(200).send(JSON.stringify(userData));
+});
 
 
 
