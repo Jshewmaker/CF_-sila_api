@@ -138,23 +138,24 @@ app.post("/get_sila_balance", async (req, res) => {
 
 app.post("/issue_sila", async (req, res) => {
   var userData = await transactions.sila_issue(req.body);
-  res.status(200).send(JSON.stringify(userData));
-});
+  res.set(userData.headers);
+  res.status(userData.statusCode).send(JSON.stringify(userData.data));});
 
 app.post("/transfer_sila", async (req, res) => {
   var userData = await transactions.sila_transfer(req.body);
-  res.status(200).send(JSON.stringify(userData));
-});
+  res.set(userData.headers);
+  res.status(userData.statusCode).send(JSON.stringify(userData.data));});
 
 app.post("/redeem_sila", async (req, res) => {
   var userData = await transactions.sila_redeem(req.body);
-  res.status(200).send(JSON.stringify(userData));
-});
+  res.set(userData.headers);
+  res.status(userData.statusCode).send(JSON.stringify(userData.data));});
 
 app.post("/get_transactions", async (req, res) => {
   var userID = req.body.user_id;
   var userData = await transactions.sila_get_transactions(userID);
-  res.status(200).send(JSON.stringify(userData));
+  res.set(userData.headers);
+  res.status(userData.statusCode).send(JSON.stringify(userData.data));
 });
 
 
