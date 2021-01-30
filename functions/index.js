@@ -17,8 +17,9 @@ admin.initializeApp();
 // "id": '0Woej2JWoWVsxmRhqm4tkado5MQ2',
 //"token": "public-sandbox-05542b25-2ff0-48ce-b58a-6ad0bf572c16"
 
+
 /////////////////////////////////////////////////////////////////////////////
-//Entities
+//Test Functions
 
 app.post('/', async (req, res) => {
   var userData = await entities.register_user("0Woej2JWoWVsxmRhqm4tkado5MQ2");
@@ -38,36 +39,46 @@ app.post("/check_handle", async (req, res) => {
   res.status(200).send(responseBody);
 });
 
+
+/////////////////////////////////////////////////////////////////////////////
+//Entities
+
+
 app.post("/register_user", async (req, res) => {
   var userID = req.body.user_id;
   var userData = await entities.register_user(userID);
-  res.status(200).send(JSON.stringify(userData));
+  res.set(userData.headers);
+  res.status(userData.statusCode).send(JSON.stringify(userData.data));
 });
 
 app.post("/request_kyc", async (req, res) => {
   var userID = req.body.user_id;
   var userData = await entities.sila_request_kyc(userID);
-  res.status(200).send(JSON.stringify(userData));
+  res.set(userData.headers);
+  res.status(userData.statusCode).send(JSON.stringify(userData.data));
 });
 
 app.post("/check_kyc", async (req, res) => {
   var userID = req.body.user_id;
   var userData = await entities.sila_check_kyc(userID);
-  res.status(200).send(JSON.stringify(userData));
+  res.set(userData.headers);
+  res.status(userData.statusCode).send(JSON.stringify(userData.data));
 });
 
 app.post("/update/email", async (req, res) => {
   var userID = req.body.user_id;
   var email = req.body.email;
   var userData = await entities.sila_add_email(userID, email);
-  res.status(200).send(JSON.stringify(userData));
+  res.set(userData.headers);
+  res.status(userData.statusCode).send(JSON.stringify(userData.data));
 });
 
 app.post("/update/phone", async (req, res) => {
   var userID = req.body.user_id;
   var phone = req.body.phone;
   var userData = await entities.sila_add_phone(userID, phone);
-  res.status(200).send(JSON.stringify(userData));
+  res.set(userData.headers);
+  res.status(userData.statusCode).send(JSON.stringify(userData.data));
 });
 
 /*
@@ -81,7 +92,8 @@ app.post("/update/identity", async (req, res) => {
   var userID = req.body.user_id;
   
   var userData = await entities.sila_add_identity(userID, req.body);
-  res.status(200).send(JSON.stringify(userData));
+  res.set(userData.headers);
+  res.status(userData.statusCode).send(JSON.stringify(userData.data));
 });
 
 /*
@@ -98,7 +110,8 @@ app.post("/update/identity", async (req, res) => {
 app.post("/update/address", async (req, res) => {
   var userID = req.body.user_id;
   var userData = await entities.sila_add_address(userID, req.body);
-  res.status(200).send(JSON.stringify(userData));
+  res.set(userData.headers);
+  res.status(userData.statusCode).send(JSON.stringify(userData.data));
 });
 
 
