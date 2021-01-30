@@ -147,14 +147,13 @@ app.post("/transfer_sila", async (req, res) => {
 });
 
 app.post("/redeem_sila", async (req, res) => {
-  var userID = req.body.user_id;
-  var userData = await transactions.sila_get_wallet(userID);
+  var userData = await transactions.sila_redeem(req.body);
   res.status(200).send(JSON.stringify(userData));
 });
 
 app.post("/get_transactions", async (req, res) => {
   var userID = req.body.user_id;
-  var userData = await transactions.sila_get_balance(userID);
+  var userData = await transactions.sila_get_transactions(userID);
   res.status(200).send(JSON.stringify(userData));
 });
 

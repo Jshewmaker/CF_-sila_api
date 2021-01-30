@@ -13,8 +13,6 @@ async function sila_issue(req){
     const userID = req.user_id;
     const amount = req.amount;
     const user = await firestore.getUserData(userID);
-    console.log("handle: " + user.sila_handle);
-    console.log("private key: " + user.private_key);
     const response = await Sila.issueSila(
         amount,
         user.sila_handle,
@@ -26,27 +24,18 @@ async function sila_issue(req){
 
 async function sila_transfer(req){
     const userID = req.user_id;
-    console.log("userID: "+userID);
     const amount = req.amount;
     const destinationHandle = req.destination_handle;
     const descriptor = req.descriptor;
-    const destinationUserID = req.destination_user_id;
     const user = await firestore.getUserData(userID);
-    const destinationWalletResponse = wallets.sila_get_wallet(destinationUserID);
-    const test =  destinationWalletResponse;
-    return test;
-    
-    //const test =  JSON.parse(destinationWalletResponse);
-    return test.data;
-    const walletAddress = destinationWalletResponse.data.wallet.blockchain_address;
 
     const response = await Sila.transferSila(
         amount,
         user.sila_handle,
         user.private_key,
         destinationHandle,
-        //walletNickname,
-        walletAddress,
+        "",
+        "",
         descriptor,
         //businessUuid,
       );
@@ -55,30 +44,35 @@ async function sila_transfer(req){
     return response;
 }
 
-async function sila_redeem(userID){
-    const walletResponse = await sila_get_wallet(userID);
-    const address = walletResponse.data.wallet.blockchain_address;
-    try{
-        const response = await Sila.getSilaBalance(address);
-        return response;
-    }
-    catch(_){
-        return _;
-    }
+async function sila_redeem(req){
+        const userID = req.user_id;
+        const amount = req.amount;
+        const descriptor = req.descriptor;
+        const user = await firestore.getUserData(userID);
+    const reponse = await Sila.redeemSila(
+        amount,
+        user.sila_handle,
+        user.private_key,
+        "default",
+        descriptor,
+        //businessUuid,
+        //processingType,
+      );
+      return reponse;
+      /*
+      Account Name is optional but defaults to 'default'.
+      Descriptor is optional and sets the transaction description
+      BusinessUuid is optional and sets the ACH Name of the transaction
+      ProcessingType is optional and can be one of STANDARD_ACH or SAME_DAY_ACH
+      */
+      
     
 }
 
 async function sila_get_transactions(userID){
-    const walletResponse = await sila_get_wallet(userID);
-    const address = walletResponse.data.wallet.blockchain_address;
-    try{
-        const response = await Sila.getSilaBalance(address);
-        return response;
-    }
-    catch(_){
-        return _;
-    }
-    
+    const user = await firestore.getUserData(userID);
+    const response = await Sila.getTransactions(user.sila_handle, user.private_key); // Filters are optional. Use Sila.TransactionFilters for a complete list of possible filters
+    return response;    
 }
 
 
@@ -86,4 +80,6 @@ async function sila_get_transactions(userID){
 module.exports = {
     sila_issue,
     sila_transfer,
+    sila_redeem,
+    sila_get_transactions,
 }
