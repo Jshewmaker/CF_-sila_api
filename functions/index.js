@@ -17,12 +17,13 @@ admin.initializeApp();
 // "id": '0Woej2JWoWVsxmRhqm4tkado5MQ2',
 //"token": "public-sandbox-05542b25-2ff0-48ce-b58a-6ad0bf572c16"
 
+/////////////////////////////////////////////////////////////////////////////
+//Entities
+
 app.post('/', async (req, res) => {
   var userData = await entities.register_user("0Woej2JWoWVsxmRhqm4tkado5MQ2");
   res.status(200).send(JSON.stringify(userData));
 });
-
-
 
 app.post("/create_test_user", async (req, res) => {
   await testFunctions.testAddDataToFirestore();
@@ -100,18 +101,24 @@ app.post("/update/address", async (req, res) => {
   res.status(200).send(JSON.stringify(userData));
 });
 
+
+/////////////////////////////////////////////////////////////////////////////
+//Accounts
+
 app.post("/link_bank_account", async (req, res) => {
   var userID = req.body.user_id;
   var plaidToken = req.body.token;
   var userData = await accounts.sila_link_bank_account(userID, plaidToken);
-  res.status(200).send(JSON.stringify(userData));
+  res.set(userData.headers);
+  res.status(userData.statusCode).send(JSON.stringify(userData.data));
 });
 
 app.post("/get_bank_accounts", async (req, res) => {
   var userID = req.body.user_id;
   
   var userData = await accounts.sila_get_bank_accounts(userID);
-  res.status(200).send(JSON.stringify(userData));
+  res.set(userData.headers);
+  res.status(userData.statusCode).send(JSON.stringify(userData.data));
 });
 
 /////////////////////////////////////////////////////////////////////////////
