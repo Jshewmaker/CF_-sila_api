@@ -1,18 +1,20 @@
-const EthCrypto = require('eth-crypto');
+/* eslint-disable no-unused-vars */
+/* eslint-disable max-len */
+const EthCrypto = require("eth-crypto");
 
 const firestore = require("./services/firebase");
 const admin = require("firebase-admin");
 
 async function createUserEthData(userID) {
   const identity = EthCrypto.createIdentity();
-  var data = {
+  const data = {
     "wallet": identity.address,
     "private_key": identity.privateKey,
     "public_key": identity.publicKey,
-  }
+  };
   console.log("1: " + identity.address);
 
-  await admin.firestore().collection('users').doc(userID).set(data, { merge: true });
+  await admin.firestore().collection("users").doc(userID).set(data, {merge: true});
 
 
   /* > {
@@ -22,4 +24,4 @@ async function createUserEthData(userID) {
 } */
 }
 
-module.exports = { createUserEthData }
+module.exports = {createUserEthData};

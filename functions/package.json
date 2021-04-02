@@ -15,12 +15,17 @@
   "main": "index.js",
   "dependencies": {
     "firebase-admin": "^9.4.2",
-    "firebase-functions": "^3.11.0"
+    "firebase-functions": "^3.11.0",
+    "sila-sdk": "^0.2.13-rc.5"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
   },
   "devDependencies": {
     "eslint": "^7.6.0",
     "eslint-config-google": "^0.14.0",
-    "firebase-functions-test": "^0.2.0"
+    "firebase-functions-test": "^0.2.0",
+    "sila-sdk": "^0.2.13-rc.5"
   },
   "private": true
 }
